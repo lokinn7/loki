@@ -166,11 +166,11 @@
 			<artifactId>jackson-annotations</artifactId>
 			<version>2.9.6</version>
 		</dependency>
-		<dependency>
+<!-- 		<dependency>
 			<groupId>com.jd</groupId>
 			<artifactId>jd-cps-client</artifactId>
 			<version>2.2</version>
-		</dependency>
+		</dependency> -->
 	</dependencies>
 
 	<build>
