@@ -3,8 +3,6 @@ package com.kuaiyou.lucky.common;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.kuaiyou.lucky.entity.Wxuser;
-
 public class Result extends HashMap<String, Object> {
 
 	private static final long serialVersionUID = 1L;
@@ -56,13 +54,6 @@ public class Result extends HashMap<String, Object> {
 		r.put("data", data);
 		r.put("enough", goods);
 		r.put("sign", sign);
-		return r;
-	}
-
-	public static Result ok_turn(Object data, Wxuser wxuser) {
-		Result r = new Result();
-		r.put("data", data);
-		r.put("user", wxuser);
 		return r;
 	}
 
