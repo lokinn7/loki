@@ -1,6 +1,6 @@
 package com.kuaiyou.lucky.mapper;
 
-import com.kuaiyou.lucky.entity.Prizesetting;
+import com.kuaiyou.lucky.entity.Salary;
 import com.kuaiyou.lucky.common.SuperMapper;
 
 /**
@@ -9,8 +9,8 @@ import com.kuaiyou.lucky.common.SuperMapper;
  * </p>
  *
  * @author yardney
- * @since 2019-08-12
+ * @since 2020-04-29
  */
-public interface PrizesettingMapper extends SuperMapper<Prizesetting> {
+public interface SalaryMapper extends SuperMapper<Salary> {
 
 }

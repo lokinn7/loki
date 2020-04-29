@@ -26,8 +26,8 @@ public class MysqlGenerator {
 	public static String parent = "com.kuaiyou";
 	public static String moduleName = "lucky";
 	public static String superMapperClass = "com.kuaiyou.lucky.common.SuperMapper";
-	public static String tablePrefix = "t_luck_";
-	public static String projectPath = "D:/luckminipro/";
+	public static String tablePrefix = "t_hxy_";
+	public static String projectPath = "D:/git/AllCode/loki/";
 
 	/**
 	 * <p>
@@ -38,12 +38,7 @@ public class MysqlGenerator {
 		// 自定义需要填充的字段s
 		List<TableFill> tableFillList = new ArrayList<>();
 		tableFillList.add(new TableFill("ASDD_SS", FieldFill.INSERT_UPDATE));
-		// String[] excludeTableNames = {};
-		// String[] includeTableNames = { "t_luck_activity", "t_luck_business",
-		// "t_luck_draw", "t_luck_prize",
-		// "t_luck_prizesetting", "t_luck_report", "t_luck_userdev",
-		// "t_luck_userdraw", "t_luck_wxuser" };
-		String[] includeTableNames = { "t_luck_adviser" };
+		String[] includeTableNames = { "t_hxy_salary" };
 		// 代码生成器
 		GlobalConfig globalConfig = new GlobalConfig().setOutputDir(projectPath + "src/main/java")
 				// 输出目录
@@ -78,8 +73,8 @@ public class MysqlGenerator {
 						// }
 						return super.processTypeConvert(fieldType);
 					}
-				}).setDriverName("com.mysql.jdbc.Driver").setUsername("kuaiyou").setPassword("kuaiyou")
-				.setUrl("jdbc:mysql://192.168.2.43:3306/kylucky?useUnicode=true&characterEncoding=UTF-8&useSSL=false&zeroDateTimeBehavior=convertToNull");
+				}).setDriverName("com.mysql.jdbc.Driver").setUsername("root").setPassword("YAnan123#")
+				.setUrl("jdbc:mysql://127.0.0.1:33061/hxy_open?useUnicode=true&characterEncoding=UTF-8&useSSL=false&zeroDateTimeBehavior=convertToNull");
 		StrategyConfig strategyConfig = new StrategyConfig()
 				// .setCapitalMode(true)// 全局大写命名
 				// .setDbColumnUnderline(true)//全局下划线命名

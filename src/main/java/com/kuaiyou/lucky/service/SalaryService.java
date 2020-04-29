@@ -1,6 +1,6 @@
 package com.kuaiyou.lucky.service;
 
-import com.kuaiyou.lucky.entity.Qrurl;
+import com.kuaiyou.lucky.entity.Salary;
 import com.baomidou.mybatisplus.service.IService;
 
 /**
@@ -9,8 +9,8 @@ import com.baomidou.mybatisplus.service.IService;
  * </p>
  *
  * @author yardney
- * @since 2019-08-20
+ * @since 2020-04-29
  */
-public interface QrurlService extends IService<Qrurl> {
+public interface SalaryService extends IService<Salary> {
 
 }
