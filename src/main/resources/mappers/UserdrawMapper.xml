@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaiyou.lucky.mapper.UserdrawMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, drawid, userid, bingo, ctime, prizelevel, btime, prizetype, flag
+    </sql>
+        
+	<select id="adminGrid" resultType="com.kuaiyou.lucky.res.AdminUserdrawRes">
+    	SELECT t.*,d.stprize,d.pubname,p.prizename,d.name AS drawname,COUNT(DISTINCT CASE WHEN t.bingo=1 THEN t.userid END) AS bingocount,COUNT(t.userid) AS joincount
+		FROM t_luck_userdraw t
+		LEFT JOIN t_luck_prizesetting p ON t.drawid = p.drawid AND t.prizelevel = p.level
+		LEFT JOIN t_luck_draw d ON t.drawid = d.id
+		<where>
+			<if test="starttime != null and starttime != ''">
+				AND t.ctime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND t.ctime &lt;= #{endtime}
+			</if>
+			<if test="name != null and name != ''">
+				AND d.name LIKE CONCAT('%',#{name},'%')
+			</if>
+		</where>
+		GROUP BY t.drawid
+		ORDER BY t.drawid
+		<if test="page !=null and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>
+    </select>
+    <select id="adminGridCount" resultType="java.lang.Integer">
+		SELECT COUNT(1)FROM (
+    		SELECT t.*
+			FROM t_luck_userdraw t
+			LEFT JOIN t_luck_prizesetting p ON t.drawid = p.drawid AND t.prizelevel = p.level
+			LEFT JOIN t_luck_draw d ON t.drawid = d.id
+			GROUP BY t.drawid
+			) temp;
+    </select>
+    
+    <select id="adminGridDetail" resultType="com.kuaiyou.lucky.res.AdminUserdrawRes">
+		SELECT t.*,w.nickname,p.prizename,a.address
+		FROM t_luck_userdraw t
+		LEFT JOIN t_luck_wxuser w ON t.userid = w.userid
+		LEFT JOIN t_luck_prizesetting p ON t.drawid = p.drawid AND t.prizelevel = p.level
+		LEFT JOIN t_luck_address a ON t.userid = a.userid AND a.drawid = t.drawid
+		WHERE t.bingo = 1 AND t.drawid = #{drawid};
+    </select>
+    
+    <update id="updateBatchWithLevel">
+    	<foreach collection="ids" item="id" separator=";">
+    		UPDATE t_luck_userdraw t
+			SET t.prizelevel = #{level}, t.bingo = 1,t.btime = NOW(), t.prizetype = #{prizetype}
+			WHERE t.id = #{id}
+    	</foreach>
+    </update>
+    
+    <select id="selectByDrawId" resultType="com.kuaiyou.lucky.res.UserdrawRes">
+    	SELECT t.*,u.avatarurl,u.nickname,ad.address,p.prizename
+		FROM t_luck_userdraw t
+		LEFT JOIN t_luck_wxuser u ON t.userid = u.userid
+		LEFT JOIN t_luck_prizesetting p ON t.drawid = p.drawid AND t.prizelevel = p.level
+		LEFT JOIN
+				(SELECT *
+				FROM t_luck_address a 
+				<where>
+					<if test="drawid != null and drawid != ''">
+						a.drawid = #{drawid}
+					</if>
+				</where>
+				)ad ON t.userid = ad.userid
+		<where>
+			<if test="drawid != null and drawid != ''">
+				t.drawid = #{drawid}
+			</if>
+		</where>
+    </select>
+    <select id="selectPubList" resultType="com.kuaiyou.lucky.res.DrawRes">
+		SELECT d.*,p.prizeurl AS stprizeurl
+		FROM t_luck_draw d
+		LEFT JOIN (
+			SELECT pr.drawid ,pr.prizeurl
+			FROM t_luck_prizesetting pr WHERE pr.level = 1) p ON d.id = p.drawid
+		WHERE d.pubid = #{userid}
+		<if test="page !=null and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>
+    </select>
+    <select id="selectPubListCount" resultType="java.lang.Integer">
+		SELECT COUNT(1) 
+		FROM t_luck_draw d
+		LEFT JOIN (
+			SELECT pr.drawid ,pr.prizeurl
+			FROM t_luck_prizesetting pr WHERE pr.level = 1) p ON d.id = p.drawid
+		WHERE d.pubid = #{userid}
+    </select>
+    <select id="selectJoinList" resultType="com.kuaiyou.lucky.res.DrawRes">
+		SELECT d.*,p.prizeurl AS stprizeurl
+		FROM t_luck_userdraw t
+		INNER JOIN t_luck_draw d ON t.drawid = d.id
+		LEFT JOIN (
+			SELECT pr.drawid ,pr.prizeurl
+			FROM t_luck_prizesetting pr WHERE pr.level = 1) p ON d.id = p.drawid
+		WHERE t.userid = #{userid}
+		<if test="page !=null and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>
+    </select>
+    <select id="selectBingoList" resultType="com.kuaiyou.lucky.res.DrawRes">
+		SELECT d.*,p.prizeurl AS stprizeurl
+		FROM t_luck_userdraw t
+		INNER JOIN t_luck_draw d ON t.drawid = d.id
+		LEFT JOIN (
+			SELECT pr.drawid ,pr.prizeurl
+			FROM t_luck_prizesetting pr WHERE pr.level = 1) p ON d.id = p.drawid
+		WHERE t.userid = #{userid} AND t.bingo = 1
+		<if test="page !=null and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>
+    </select>
+
+    <select id="selectJoinListCount" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM t_luck_userdraw t
+		INNER JOIN t_luck_draw d ON t.drawid = d.id
+		LEFT JOIN (
+			SELECT pr.drawid ,pr.prizeurl
+			FROM t_luck_prizesetting pr WHERE pr.level = 1) p ON d.id = p.drawid
+		WHERE t.userid = #{userid}
+    </select>
+    <select id="selectBingoListCount" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM t_luck_userdraw t
+		INNER JOIN t_luck_draw d ON t.drawid = d.id
+		LEFT JOIN (
+			SELECT pr.drawid ,pr.prizeurl
+			FROM t_luck_prizesetting pr WHERE pr.level = 1) p ON d.id = p.drawid
+		WHERE t.userid = #{userid} AND t.bingo = 1
+    </select>
+    <!-- 根據類型查找對應中獎或者參與用戶詳情 -->
+    <select id="selectByDrawId2" resultType="com.kuaiyou.lucky.res.BingoWithNoRes">
+    	SELECT t.*,u.avatarurl,u.nickname,ad.address,p.prizename
+		FROM t_luck_userdraw t
+		LEFT JOIN t_luck_wxuser u ON t.userid = u.userid
+		LEFT JOIN t_luck_prizesetting p ON t.drawid = p.drawid AND t.prizelevel = p.level
+		LEFT JOIN
+				(SELECT *
+				FROM t_luck_address a 
+				<where>
+					<if test="drawid != null and drawid != ''">
+						a.drawid = #{drawid}
+					</if>
+				</where>
+				)ad ON t.userid = ad.userid
+		<where>
+			<if test="drawid != null and drawid != ''">
+				AND t.drawid = #{drawid}
+			</if>
+			<if test="prizelevel != null and prizelevel > 0">
+				AND t.prizelevel = #{prizelevel}
+			</if>
+			<if test="prizetype != null and prizetype != ''">
+				AND t.prizetype = #{prizetype}
+			</if>
+		</where>
+		<if test="page !=null and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>
+    </select>
+    <select id="selectByDrawId2Count" resultType="java.lang.Integer">
+    	SELECT COUNT(1)
+		FROM t_luck_userdraw t
+		LEFT JOIN t_luck_wxuser u ON t.userid = u.userid
+				LEFT JOIN t_luck_prizesetting p ON t.drawid = p.drawid AND t.prizelevel = p.level
+		LEFT JOIN
+				(SELECT *
+				FROM t_luck_address a 
+				<where>
+					<if test="drawid != null and drawid != ''">
+						a.drawid = #{drawid}
+					</if>
+				</where>
+				)ad ON t.userid = ad.userid
+		<where>
+			<if test="drawid != null and drawid != ''">
+				AND t.drawid = #{drawid}
+			</if>
+			<if test="prizelevel != null and prizelevel >0">
+				AND t.prizelevel = #{prizelevel}
+			</if>
+		</where>
+    </select>
+    <select id="findCountjoin" resultType="com.kuaiyou.lucky.res.DaydataRes">
+    	SELECT COUNT(DISTINCT(t.userid)) AS joincount ,DATE_FORMAT(t.ctime ,'%Y-%m-%d') AS ctime
+		FROM t_luck_userdraw t
+		<where>
+			<if test="starttime != null and starttime != ''">
+				AND t.ctime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND t.ctime &lt;= #{endtime}
+			</if>
+		</where>
+		GROUP BY DATE_FORMAT(t.ctime ,'%Y-%m-%d')
+    </select>
+    <select id="findUv" resultType="com.kuaiyou.lucky.res.DaydataRes">
+    	SELECT COUNT(DISTINCT(u.userid)) AS newuv,DATE_FORMAT(u.createtime ,'%Y-%m-%d') AS ctime 
+		FROM t_luck_wxuser u
+		<where>
+			<if test="starttime != null and starttime != ''">
+				AND u.createtime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND u.createtime &lt;= #{endtime}
+			</if>
+		</where>
+		GROUP BY DATE_FORMAT(u.createtime ,'%Y-%m-%d')
+    </select>
+    <select id="findPubcount" resultType="com.kuaiyou.lucky.res.DaydataRes">
+    	SELECT DATE_FORMAT(d.ctime ,'%Y-%m-%d') AS ctime ,COUNT(1) pubcount
+		FROM t_luck_draw d
+		<where>
+			<if test="starttime != null and starttime != ''">
+				AND d.ctime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND d.ctime &lt;= #{endtime}
+			</if>
+		</where>
+		GROUP BY DATE_FORMAT(d.ctime ,'%Y-%m-%d')
+    </select>
+    <select id="findOpencount" resultType="com.kuaiyou.lucky.res.DaydataRes">
+    	SELECT DATE_FORMAT(d.ctime ,'%Y-%m-%d') AS ctime ,COUNT(1) opencount
+		FROM t_luck_draw d
+		<where>
+			d.status = 1 
+				<if test="starttime != null and starttime != ''">
+					AND d.ctime &gt;= #{starttime}
+				</if>
+				<if test="endtime != null and endtime != ''">
+					AND d.ctime &lt;= #{endtime}
+				</if>
+		</where>
+		GROUP BY DATE_FORMAT(d.ctime ,'%Y-%m-%d')
+    </select>
+    
+    <select id="selectJoinsList" resultType="com.kuaiyou.lucky.entity.Userdraw">
+    	SELECT *
+		FROM t_luck_userdraw t
+		WHERE t.userid NOT IN
+			 (SELECT d.userid
+			  FROM t_luck_banlist d) AND t.drawid = #{drawid} AND t.bingo = 0;
+    </select>
+    
+</mapper>

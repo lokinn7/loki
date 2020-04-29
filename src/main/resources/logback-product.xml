@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+	<property name="LOG_FILE"
+		value="${LOG_FILE:-${LOG_PATH:-${LOG_TEMP:-${java.io.tmpdir:-/tmp}}}/spring.log}" />
+	<property name="PATH" value="/coolad/logs/luckminipro/" />
+	<property name="INFO-FILENAME" value="info.log" />
+	<property name="ERROR-FILENAME" value="error.log" />
+	<property name="DEBUG-FILENAME" value="debug.log" />
+	<property name="WARN-FILENAME" value="warn.log" />
+	<include
+		resource="org/springframework/boot/logging/logback/console-appender.xml" />
+
+	<appender name="INFO-FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+
+		<filter class="ch.qos.logback.classic.filter.LevelFilter"><!-- 只打印错误日志 -->
+			<level>INFO</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
+
+		<encoder>
+			<pattern>%d %-5level [%thread] %logger{36} - %msg%n</pattern>
+		</encoder>
+		<file>${PATH}${INFO-FILENAME}</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${PATH}${INFO-FILENAME}.%d{yyyy-MM-dd}
+			</fileNamePattern>
+			<MaxHistory>45</MaxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="ERROR-FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>ERROR</level>
+		</filter>
+		<encoder>
+			<pattern>%d %-5level [%thread] %logger{36} - %msg%n</pattern>
+		</encoder>
+		<file>${PATH}${ERROR-FILENAME}</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${PATH}${ERROR-FILENAME}.%d{yyyy-MM-dd}
+			</fileNamePattern>
+			<MaxHistory>45</MaxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<appender name="DEBUG-FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>DEBUG</level>
+		</filter>
+		<encoder>
+			<pattern>%d %-5level [%thread] %logger{36} - %msg%n</pattern>
+		</encoder>
+		<file>${PATH}${DEBUG-FILENAME}</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${PATH}${DEBUG-FILENAME}.%d{yyyy-MM-dd}
+			</fileNamePattern>
+			<MaxHistory>45</MaxHistory>
+		</rollingPolicy>
+	</appender>
+
+
+	<appender name="WARN-FILE"
+		class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>WARN</level>
+		</filter>
+		<encoder>
+			<pattern>%d %-5level [%thread] %logger{36} - %msg%n</pattern>
+		</encoder>
+		<file>${PATH}${WARN-FILENAME}</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${PATH}${WARN-FILENAME}.%d{yyyy-MM-dd}
+			</fileNamePattern>
+			<MaxHistory>45</MaxHistory>
+		</rollingPolicy>
+	</appender>
+
+	<root level="info">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="INFO-FILE" />
+		<appender-ref ref="WARN-FILE" />
+		<appender-ref ref="ERROR-FILE" />
+	</root>
+
+	<logger name="com.kuaiyou.lucky.mapper" level="debug" additivity="false">
+		<appender-ref ref="CONSOLE" />
+		<appender-ref ref="DEBUG-FILE" />
+	</logger>
+
+</configuration>

@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaiyou.lucky.mapper.RoundlogMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, prizeid, userid, status, ctime, rtype
+    </sql>
+    
+    <select id="selectByUserid" resultType="com.kuaiyou.lucky.res.RoundlogRes">
+    	SELECT t.*,p.prizeurl,p.linkurl,p.name,temp.address,p.appkey,p.type,p.amount
+		FROM t_luck_roundlog t
+		LEFT JOIN t_luck_prize p ON t.prizeid = p.id
+		LEFT JOIN (
+		SELECT a.userid,a.address
+		FROM t_luck_address a GROUP BY a.userid) temp
+		ON t.userid = temp.userid
+		<where>
+			t.userid = #{userid}
+			<if test="starttime != null and starttime != ''">
+				AND t.ctime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND t.ctime &lt;= #{endtime}
+			</if>
+		</where>
+		<if test="page !=null  and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>;
+    </select>
+    <select id="selectByUseridCount" resultType="java.lang.Integer">
+    	SELECT COUNT(1)
+		FROM t_luck_roundlog t
+		LEFT JOIN t_luck_prize p ON t.prizeid = p.id
+		LEFT JOIN t_luck_address a ON t.userid = a.userid
+		<where>
+			t.userid = #{userid}
+			<if test="starttime != null and starttime != ''">
+				AND t.ctime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND t.ctime &lt;= #{endtime}
+			</if>
+		</where>
+    </select>
+    
+    <select id="baseList" resultType="com.kuaiyou.lucky.res.RoundlogRes">
+    	SELECT t.*,p.prizeurl,p.linkurl,p.name,a.address,p.appkey,p.type,p.amount
+		FROM t_luck_roundlog t
+		LEFT JOIN t_luck_prize p ON t.prizeid = p.id
+		LEFT JOIN t_luck_address a ON t.userid = a.userid
+		<where>
+			<if test="starttime != null and starttime != ''">
+				AND t.ctime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND t.ctime &lt;= #{endtime}
+			</if>
+		</where>
+		<if test="page !=null  and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>;
+    </select>
+    <select id="baseListCount" resultType="java.lang.Integer">
+    	SELECT COUNT(1)
+		FROM t_luck_roundlog t
+		LEFT JOIN t_luck_prize p ON t.prizeid = p.id
+		LEFT JOIN t_luck_address a ON t.userid = a.userid
+		<where>
+			<if test="starttime != null and starttime != ''">
+				AND t.ctime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND t.ctime &lt;= #{endtime}
+			</if>
+		</where>
+		
+    </select>
+
+</mapper>

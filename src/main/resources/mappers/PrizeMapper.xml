@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaiyou.lucky.mapper.PrizeMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, status, prizeurl, mark, type, ctime, utime, pubid, pubtype, linkurl,appkey,appsecret,atype,amount,pub
+    </sql>
+
+	<select id="getRatos" resultType="com.kuaiyou.lucky.entity.Prize">
+		SELECT *
+		FROM (
+			SELECT p.*,IFNULL(r.bingo,0) AS bingo
+			FROM t_luck_prize p LEFT JOIN (
+				SELECT t.prizeid,COUNT(t.userid) AS bingo
+				FROM t_luck_roundlog t
+				WHERE t.userid = #{userid} AND t.ctime BETWEEN #{start} AND #{end}
+				GROUP BY t.prizeid) r ON p.id = r.prizeid 
+			WHERE p.rato > 0 AND p.atype = 2 AND p.pub = 1 ) temp 
+		WHERE temp.bingo = 0 ;
+	</select>
+</mapper>

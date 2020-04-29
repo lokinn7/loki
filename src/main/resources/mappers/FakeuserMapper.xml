@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaiyou.lucky.mapper.FakeuserMapper">
+
+	<!-- 通用查询结果列 -->
+	<sql id="Base_Column_List">
+		id, nickname, avatarurl, prizelevel, drawid
+	</sql>
+	<select id="selectByDrawid" resultType="com.kuaiyou.lucky.res.UserdrawRes">
+		SELECT t.*
+		FROM t_luck_fakeuser t
+		WHERE t.drawid = #{drawid} AND t.prizelevel = #{prizelevel};
+	</select>
+	
+	<select id="selectFakeList" resultType="com.kuaiyou.lucky.res.UserdrawRes">
+		SELECT *
+		FROM t_luck_fakeuser t
+		<where>
+			<if test="drawid != null and drawid != ''">
+				AND t.drawid = #{drawid}
+			</if>
+			<if test="prizelevel != null and prizelevel > 0">
+				AND t.prizelevel = #{prizelevel}
+			</if>
+		</where>
+		<if test="page !=null and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>
+	</select>
+	<select id="selectFakeListCount" resultType="java.lang.Integer">
+		SELECT COUNT(1)
+		FROM t_luck_fakeuser t
+		<where>
+			<if test="drawid != null and drawid != ''">
+				AND t.drawid = #{drawid}
+			</if>
+			<if test="prizelevel != null and prizelevel > 0">
+				AND t.prizelevel = #{prizelevel}
+			</if>
+		</where>
+	</select>
+</mapper>

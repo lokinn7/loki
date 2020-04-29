@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaiyou.lucky.mapper.ReportMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, drawid, userid, reason, ctime
+    </sql>
+    
+    <select id="baseList" resultType="com.kuaiyou.lucky.res.ReportRes">
+    	SELECT t.*,d.pubname,w.nickname
+		FROM t_luck_report t
+		INNER JOIN t_luck_draw d ON t.drawid = d.id
+		INNER JOIN t_luck_wxuser w ON t.userid = w.userid
+		<where>
+			<if test="starttime != null and starttime != ''">
+				AND t.ctime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND t.ctime &lt;= #{endtime}
+			</if>
+			<if test="pubname != null and pubname != ''">
+				AND d.pubname LIKE CONCAT('%',#{pubname},'%')
+			</if>
+			<if test="nickname != null and nickname != ''">
+				AND w.nickname LIKE CONCAT('%',#{nickname},'%')
+			</if>
+		</where>
+		<if test="page !=null  and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>;
+    </select>
+    
+    <select id="baseListCount" resultType="java.lang.Integer">
+    	SELECT COUNT(1)
+		FROM t_luck_report t
+		INNER JOIN t_luck_draw d ON t.drawid = d.id
+		INNER JOIN t_luck_wxuser w ON t.userid = w.userid
+		<where>
+			<if test="starttime != null and starttime != ''">
+				AND t.ctime &gt;= #{starttime}
+			</if>
+			<if test="endtime != null and endtime != ''">
+				AND t.ctime &lt;= #{endtime}
+			</if>
+			<if test="pubname != null and pubname != ''">
+				AND d.pubname LIKE CONCAT('%',#{pubname},'%')
+			</if>
+			<if test="nickname != null and nickname != ''">
+				AND w.nickname LIKE CONCAT('%',#{nickname},'%')
+			</if>
+		</where>
+		<if test="page !=null  and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>;
+    </select>
+
+</mapper>

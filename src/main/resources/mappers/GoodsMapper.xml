@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaiyou.lucky.mapper.GoodsMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, skuid, deleted, type, amount, imgurl, skuname, brandname, price, lowestprice, shopname, isjdale, discount, ctime, couponurl,gtype,couponlink,shareimg
+    </sql>
+    
+    <select id="goodList" resultType="com.kuaiyou.lucky.res.GoodsRes">
+    	SELECT t.*,CASE  WHEN c.userid IS NULL THEN 0 WHEN c.userid IS NOT NULL THEN 1 END AS isget
+		FROM t_luck_goods t
+		LEFT JOIN (
+			SELECT *
+			FROM t_luck_convert co
+			WHERE co.userid = #{userid}
+		)c ON t.skuid = c.skuid
+		<where>
+			deleted = 0 AND t.gtype = 2
+			<if test="type != null">
+				AND t.type = #{type}
+			</if>
+		</where>
+		<if test="page !=null  and skip > 0">
+			LIMIT #{page},#{skip}
+		</if>;
+    </select>
+    <select id="goodListCount" resultType="java.lang.Integer">
+       	SELECT COUNT(1)
+		FROM t_luck_goods t
+		LEFT JOIN (
+			SELECT *
+			FROM t_luck_convert co
+			WHERE co.userid = #{userid}
+		)c ON t.skuid = c.skuid
+		<where>
+			deleted = 0 AND t.gtype = 2
+			<if test="type != null">
+				AND t.type = #{type}
+			</if>
+		</where>
+    </select>
+
+</mapper>
