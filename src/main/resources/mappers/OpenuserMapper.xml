@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kuaiyou.lucky.mapper.OpenuserMapper">
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, openid, nickname, sub, gender, city, country, province, language, avatarurl, unsubtime, subtime, unionid, remark, groupid, tags, ctime, deleted
+    </sql>
+    
+    <select id="selectBySubSign" resultType="com.kuaiyou.lucky.entity.Openuser">
+    	SELECT t.*
+		FROM t_luck_openuser t
+		INNER JOIN t_luck_wxuser w ON t.unionid = w.unionid
+		WHERE w.subsign = 1 AND w.status = 1 AND t.sub = 1;
+    </select>
+
+</mapper>

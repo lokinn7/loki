@@ -18,7 +18,7 @@
 		<java.version>1.8</java.version>
 		<maven.compiler.source>${java.version}</maven.compiler.source>
 		<maven.compiler.target>${java.version}</maven.compiler.target>
-		<!-- <weixin-sdk.version>0.9.6-ky</weixin-sdk.version> -->
+		<weixin-sdk.version>0.9.6-ky</weixin-sdk.version>
 	</properties>
 
 
@@ -117,7 +117,7 @@
 			<artifactId>spring-aspects</artifactId>
 		</dependency>
 
-		<!-- <dependency>
+		<dependency>
 			<groupId>cn.com.riversoft</groupId>
 			<artifactId>weixin-app</artifactId>
 			<version>${weixin-sdk.version}</version>
@@ -126,7 +126,7 @@
 			<groupId>cn.com.riversoft</groupId>
 			<artifactId>weixin-mp</artifactId>
 			<version>${weixin-sdk.version}</version>
-		</dependency> -->
+		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
