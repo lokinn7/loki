@@ -38,7 +38,7 @@ public class SalaryServiceImpl extends ServiceImpl<SalaryMapper, Salary> impleme
 	@Override
 	public Salary selectByMonth(String month, String toUser) {
 		EntityWrapper<Bind> wrapper = new EntityWrapper<Bind>();
-		wrapper.eq(Bind.OPENID, toUser).like(Salary.MONTH, month);
+		wrapper.eq(Bind.OPENID, toUser);
 		Bind bindcache = bindService.selectOne(wrapper);
 		if (bindcache != null) {
 			EntityWrapper<Salary> swrapper = new EntityWrapper<Salary>();
