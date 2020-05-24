@@ -24,7 +24,7 @@ import lombok.experimental.Accessors;
  */
 @Data
 @Accessors(chain = true)
-@TableName("t_luck_openuser")
+@TableName("t_hxy_openuser")
 public class Openuser extends Model<Openuser> {
 
     private static final long serialVersionUID = 1L;

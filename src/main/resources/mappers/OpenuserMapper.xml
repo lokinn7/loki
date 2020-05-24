@@ -9,7 +9,7 @@
     
     <select id="selectBySubSign" resultType="com.kuaiyou.lucky.entity.Openuser">
     	SELECT t.*
-		FROM t_luck_openuser t
+		FROM t_hxy_openuser t
 		INNER JOIN t_luck_wxuser w ON t.unionid = w.unionid
 		WHERE w.subsign = 1 AND w.status = 1 AND t.sub = 1;
     </select>
