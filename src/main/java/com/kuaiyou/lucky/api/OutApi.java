@@ -16,7 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.kuaiyou.lucky.common.Project;
+import com.kuaiyou.lucky.entity.Openuser;
+import com.kuaiyou.lucky.entity.Salary;
 import com.kuaiyou.lucky.service.OpenuserService;
+import com.kuaiyou.lucky.service.SalaryService;
 import com.kuaiyou.lucky.utils.IDCodeUtil;
 import com.riversoft.weixin.common.decrypt.AesException;
 import com.riversoft.weixin.common.decrypt.MessageDecryption;
@@ -51,6 +54,9 @@ public class OutApi {
 
 	@Autowired
 	OpenuserService openuserService;
+
+	@Autowired
+	SalaryService salaryService;
 
 	@RequestMapping("signature")
 	public String signature(@RequestParam(name = "signature", required = false) String signature,
@@ -178,9 +184,23 @@ public class OutApi {
 			// 接受消息
 			switch (xmlRequest.getMsgType()) {
 			case text:
+				String content = event.getContent();
 				logger.info(event.getContent());
-				break;
+				/**
+				 * <pre>
+				 * 	1.接受身份证号码
+				 * 2.接受月份数字
+				 * 3.接受普通消息
+				 * </pre>
+				 */
+				if (content.equals("贺亚楠")) {
+					Salary openuser = salaryService.selectById(1);
 
+					textXmlMessage.setContent("姓名：" + "测试人员" + "/r/n" + "身份证号：" + openuser.getIdcode() + "/r/n" + "部门"
+							+ openuser.getDepartment());
+					return xmlRequest;
+				}
+				break;
 			default:
 				break;
 			}
