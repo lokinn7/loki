@@ -126,13 +126,13 @@ public class OutApi {
 			TextRequest text = (TextRequest) xmlRequest;
 
 			// 接受事件
-			logger.info(JSON.toJSONString(eventType));
+			logger.info("{}",JSON.toJSONString(eventType));
 			switch (eventType) {
 			case CLICK:
 				ClickEvent clickEvent = (ClickEvent) xmlRequest;
-				logger.info(JSON.toJSONString(clickEvent));
+				logger.info("{}",JSON.toJSONString(clickEvent));
 				if (clickEvent.getEventKey().equals("about_salary")) {
-					logger.info(JSON.toJSONString(text));
+					logger.info("{}",JSON.toJSONString(text));
 					/**
 					 * <pre>
 					 * 1.菜单判断用户是否绑定
