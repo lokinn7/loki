@@ -130,6 +130,10 @@ public class OutApi {
 			case CLICK:
 				ClickEvent clickEvent = (ClickEvent) xmlRequest;
 				logger.info("{}", JSON.toJSONString(clickEvent));
+				/**
+				 * 判断用户是否绑定，绑定了返回当月，没有绑定返回原消息
+				 * 
+				 */
 //				if (clickEvent.getEventKey().equals("about_salary")) {
 //					/**
 //					 * <pre>
@@ -139,7 +143,7 @@ public class OutApi {
 //					 */
 //					openuserService.bindUser(text.getContent(), fromUser);
 //				}
-				textXmlMessage.setContent("回复身份证号与我们的公众号绑定后即可回复月份查询工资！");
+				textXmlMessage.setContent("回复身份证号与我们的公众号绑定，即可回复月份查询工资！");
 				return textXmlMessage;
 			case subscribe:
 				// 添加用户 fromuser 即为openid
@@ -158,6 +162,23 @@ public class OutApi {
 			switch (xmlRequest.getMsgType()) {
 			case text:
 
+				break;
+
+			default:
+				break;
+			}
+		}
+		if (xmlRequest instanceof TextRequest) {
+			TextXmlMessage textXmlMessage = new TextXmlMessage();
+			textXmlMessage.setFromUser(toUser);
+			textXmlMessage.setToUser(fromUser);
+			textXmlMessage.setCreateTime(new Date());
+			TextRequest event = (TextRequest) xmlRequest;
+			logger.info("{},{}", fromUser, JSON.toJSONString(event));
+			// 接受消息
+			switch (xmlRequest.getMsgType()) {
+			case text:
+				logger.info(event.getContent());
 				break;
 
 			default:
