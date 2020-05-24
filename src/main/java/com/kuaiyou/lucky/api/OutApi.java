@@ -158,7 +158,6 @@ public class OutApi {
 			switch (xmlRequest.getMsgType()) {
 			case text:
 
-				logger.info(JSON.toJSONString(text));
 				break;
 
 			default:
