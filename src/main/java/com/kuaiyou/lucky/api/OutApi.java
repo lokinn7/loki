@@ -126,9 +126,11 @@ public class OutApi {
 			TextRequest text = (TextRequest) xmlRequest;
 
 			// 接受事件
+			logger.info(JSON.toJSONString(eventType));
 			switch (eventType) {
 			case CLICK:
 				ClickEvent clickEvent = (ClickEvent) xmlRequest;
+				logger.info(JSON.toJSONString(clickEvent));
 				if (clickEvent.getEventKey().equals("about_salary")) {
 					logger.info(JSON.toJSONString(text));
 					/**
@@ -138,7 +140,7 @@ public class OutApi {
 					 * </pre>
 					 */
 					if (new IDCodeUtil().validate(text.getContent())) {
-						
+
 					}
 					openuserService.bindUser(text.getContent(), fromUser);
 				}
