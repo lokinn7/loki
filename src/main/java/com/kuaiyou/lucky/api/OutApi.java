@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.alibaba.fastjson.JSON;
 import com.kuaiyou.lucky.common.Project;
-import com.kuaiyou.lucky.entity.Openuser;
+import com.kuaiyou.lucky.entity.Bind;
 import com.kuaiyou.lucky.entity.Salary;
+import com.kuaiyou.lucky.entity.User;
+import com.kuaiyou.lucky.service.BindService;
 import com.kuaiyou.lucky.service.OpenuserService;
 import com.kuaiyou.lucky.service.SalaryService;
+import com.kuaiyou.lucky.service.UserService;
+import com.kuaiyou.lucky.utils.DateUtil;
 import com.kuaiyou.lucky.utils.IDCodeUtil;
 import com.riversoft.weixin.common.decrypt.AesException;
 import com.riversoft.weixin.common.decrypt.MessageDecryption;
@@ -29,7 +33,6 @@ import com.riversoft.weixin.common.event.EventRequest;
 import com.riversoft.weixin.common.event.EventType;
 import com.riversoft.weixin.common.exception.WxRuntimeException;
 import com.riversoft.weixin.common.message.MsgType;
-import com.riversoft.weixin.common.message.Text;
 import com.riversoft.weixin.common.message.XmlMessageHeader;
 import com.riversoft.weixin.common.message.xml.TextXmlMessage;
 import com.riversoft.weixin.common.request.TextRequest;
@@ -57,6 +60,12 @@ public class OutApi {
 
 	@Autowired
 	SalaryService salaryService;
+
+	@Autowired
+	BindService bindService;
+
+	@Autowired
+	UserService userService;
 
 	@RequestMapping("signature")
 	public String signature(@RequestParam(name = "signature", required = false) String signature,
@@ -140,15 +149,16 @@ public class OutApi {
 				 * 判断用户是否绑定，绑定了返回当月，没有绑定返回原消息
 				 * 
 				 */
-//				if (clickEvent.getEventKey().equals("about_salary")) {
-//					/**
-//					 * <pre>
-//					 * 1.菜单判断用户是否绑定
-//					 * 2.身份证校验判断
-//					 * </pre>
-//					 */
-//					openuserService.bindUser(text.getContent(), fromUser);
-//				}
+
+				if (clickEvent.getEventKey().equals("about_salary")) {
+					Bind bind = bindService.selectWithIDcode(toUser);
+					if (bind != null) {
+						Salary openuser = salaryService.selectByOpenidAndMonth(bind);
+						textXmlMessage.setContent("姓名：" + "测试人员" + "\n" + "身份证号：" + openuser.getIdcode() + "\n" + "部门"
+								+ openuser.getDepartment());
+						return textXmlMessage;
+					}
+				}
 				textXmlMessage.setContent("回复身份证号与我们的公众号绑定，即可回复月份查询工资！");
 				return textXmlMessage;
 			case subscribe:
@@ -181,24 +191,45 @@ public class OutApi {
 			textXmlMessage.setCreateTime(new Date());
 			TextRequest event = (TextRequest) xmlRequest;
 			logger.info("{},{}", fromUser, JSON.toJSONString(event));
-			// 接受消息
+			/**
+			 * <pre>
+			 * 	1.接受身份证号码
+			 * 2.接受月份数字
+			 * 3.接受普通消息
+			 * </pre>
+			 */
 			switch (xmlRequest.getMsgType()) {
 			case text:
 				String content = event.getContent();
-				logger.info(event.getContent());
-				/**
-				 * <pre>
-				 * 	1.接受身份证号码
-				 * 2.接受月份数字
-				 * 3.接受普通消息
-				 * </pre>
-				 */
-				if (content.equals("贺亚楠")) {
-					Salary openuser = salaryService.selectById(1);
-
-					textXmlMessage.setContent("姓名：" + "测试人员" + "\n" + "身份证号：" + openuser.getIdcode() + "\n" + "部门"
-							+ openuser.getDepartment());
+				if (new IDCodeUtil().validate(content)) {
+					logger.info(event.getContent());
+					// 绑定公众号和用户
+					User user = userService.selectByIdCode(content);
+					if (user == null) {
+						textXmlMessage.setContent("系统暂未收录您的个人信息，请联系管理员");
+						return textXmlMessage;
+					}
+					bindService.bind(content, toUser);
+					textXmlMessage.setContent("绑定成功，回复年份+月份即可查询工资，如：2020-01");
 					return textXmlMessage;
+				}
+				if (DateUtil.isValidDate(content)) {
+					logger.info(event.getContent());
+					// 返回指定月份工资
+					Salary openuser = salaryService.selectByMonth(content, toUser);
+					if (openuser != null) {
+						textXmlMessage.setContent("姓名：" + openuser.getNickname() + "\n身份证号：" + openuser.getIdcode()
+								+ "\n部门:" + openuser.getDepartment() + "\n岗位工资" + openuser.getPostSalary() + "\n基本工资"
+								+ openuser.getBaseSalary() + "\n岗位（技术）津贴" + openuser.getPostSubsidy() + "\n学历津贴"
+								+ openuser.getEduSubsidy() + "\n出勤" + openuser.getAttendance() + "\n加班"
+								+ openuser.getOvertime() + "\n本月工资" + openuser.getSalary() + "\n罚款" + openuser.getFine()
+								+ "\n收入合计" + openuser.getTotal() + "\n税费扣除" + openuser.getAddTaxes() + "\n扣借款"
+								+ openuser.getMines() + "\n实发" + openuser.getFactSalary());
+						return textXmlMessage;
+					} else {
+						textXmlMessage.setContent("系统暂未收录该月工资信息，请日后再试");
+						return textXmlMessage;
+					}
 				}
 				break;
 			default:

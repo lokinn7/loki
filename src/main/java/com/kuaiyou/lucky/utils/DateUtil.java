@@ -14,7 +14,20 @@ import cn.hutool.core.date.DateTime;
 public class DateUtil {
 
 	public static String YMD = "yyyy-MM-dd";
+	public static String YM = "yyyy-MM";
 	public static String YMDHMS = "yyyy-MM-dd HH:mm:ss";
+
+	public static boolean isValidDate(String str) {
+		boolean convertSuccess = true;
+		SimpleDateFormat format = new SimpleDateFormat(YM);
+		try {
+			format.setLenient(false);
+			format.parse(str);
+		} catch (ParseException e) {
+			convertSuccess = false;
+		}
+		return convertSuccess;
+	}
 
 	public static String format(Date date, String patter) {
 		SimpleDateFormat sdf = new SimpleDateFormat(patter);
@@ -30,6 +43,11 @@ public class DateUtil {
 
 	public static String getNow() {
 		SimpleDateFormat sdf = new SimpleDateFormat(YMD);
+		return sdf.format(new Date());
+	}
+
+	public static String getMonth() {
+		SimpleDateFormat sdf = new SimpleDateFormat(YM);
 		return sdf.format(new Date());
 	}
 
@@ -139,8 +157,7 @@ public class DateUtil {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(getEndWeekOfDay());
-		System.out.println(getStartWeekOfDay());
+		System.out.println(isValidDate("2020-10"));
 	}
 
 }

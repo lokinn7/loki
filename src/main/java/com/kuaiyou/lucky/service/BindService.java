@@ -13,4 +13,8 @@ import com.baomidou.mybatisplus.service.IService;
  */
 public interface BindService extends IService<Bind> {
 
+	Bind selectWithIDcode(String toUser);
+
+	boolean bind(String content, String toUser);
+
 }
