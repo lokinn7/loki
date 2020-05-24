@@ -166,6 +166,7 @@ public class OutApi {
 //							return textXmlMessage;
 //						}
 						textXmlMessage.setContent("已将我们的公众号与您的个人身份绑定，可回复月份，如：2020-01即可查询工资！");
+						return textXmlMessage;
 					}
 				}
 				textXmlMessage.setContent("回复身份证号与我们的公众号绑定，如已绑定则可回复月份，如：2020-01查询工资！");
@@ -229,11 +230,17 @@ public class OutApi {
 					if (openuser != null) {
 						textXmlMessage.setContent("姓名：" + openuser.getNickname() + "\n身份证号：" + openuser.getIdcode()
 								+ "\n部门:" + openuser.getDepartment() + "\n岗位工资" + openuser.getPostSalary() + "\n基本工资"
-								+ openuser.getBaseSalary() + "\n岗位（技术）津贴" + openuser.getPostSubsidy() + "\n学历津贴"
-								+ openuser.getEduSubsidy() + "\n出勤" + openuser.getAttendance() + "\n加班"
-								+ openuser.getOvertime() + "\n本月工资" + openuser.getSalary() + "\n罚款" + openuser.getFine()
-								+ "\n收入合计" + openuser.getTotal() + "\n税费扣除" + openuser.getAddTaxes() + "\n扣借款"
-								+ openuser.getMines() + "\n实发" + openuser.getFactSalary());
+								+ openuser.getBaseSalary() + "\n岗位（技术）津贴"
+								+ (openuser.getPostSubsidy() == null ? "-" : openuser.getPostSubsidy()) + "\n学历津贴"
+								+ (openuser.getEduSubsidy() == null ? "-" : openuser.getEduSubsidy()) + "\n出勤"
+								+ (openuser.getAttendance() == null ? "-" : openuser.getAttendance()) + "\n加班"
+								+ (openuser.getOvertime() == null ? "-" : openuser.getOvertime()) + "\n本月工资"
+								+ openuser.getSalary() + "\n罚款"
+								+ (openuser.getFine() == null ? "-" : openuser.getFine()) + "\n收入合计"
+								+ openuser.getTotal() + "\n税费扣除"
+								+ (openuser.getAddTaxes() == null ? "-" : openuser.getAddTaxes()) + "\n扣借款"
+								+ (openuser.getMines() == null ? "-" : openuser.getMines()) + "\n实发"
+								+ openuser.getFactSalary());
 						return textXmlMessage;
 					} else {
 						textXmlMessage.setContent("系统暂未收录该月工资信息，请日后再试");
