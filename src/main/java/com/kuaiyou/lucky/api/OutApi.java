@@ -198,7 +198,7 @@ public class OutApi {
 
 					textXmlMessage.setContent("姓名：" + "测试人员" + "/r/n" + "身份证号：" + openuser.getIdcode() + "/r/n" + "部门"
 							+ openuser.getDepartment());
-					return xmlRequest;
+					return textXmlMessage;
 				}
 				break;
 			default:
