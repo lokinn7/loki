@@ -126,7 +126,7 @@ public class OutApi {
 			case subscribe:
 				// 添加用户 fromuser 即为openid
 				openuserService.subOpenUser(fromUser);
-				textXmlMessage.setContent("欢迎关注好物抽抽抽！");
+				textXmlMessage.setContent("欢迎关注华鑫源快讯！");
 				return textXmlMessage;
 			case unsubscribe:
 				openuserService.unsubOpenUser(fromUser);
