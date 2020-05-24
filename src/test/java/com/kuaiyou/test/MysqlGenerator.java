@@ -27,7 +27,7 @@ public class MysqlGenerator {
 	public static String moduleName = "lucky";
 	public static String superMapperClass = "com.kuaiyou.lucky.common.SuperMapper";
 	public static String tablePrefix = "t_hxy_";
-	public static String projectPath = "D:/git/AllCode/loki/";
+	public static String projectPath = "F:\\eclipse\\source-code/loki/";
 
 	/**
 	 * <p>
@@ -38,7 +38,7 @@ public class MysqlGenerator {
 		// 自定义需要填充的字段s
 		List<TableFill> tableFillList = new ArrayList<>();
 		tableFillList.add(new TableFill("ASDD_SS", FieldFill.INSERT_UPDATE));
-		String[] includeTableNames = { "t_hxy_salary" };
+		String[] includeTableNames = { "t_hxy_user","t_hxy_bind" };
 		// 代码生成器
 		GlobalConfig globalConfig = new GlobalConfig().setOutputDir(projectPath + "src/main/java")
 				// 输出目录

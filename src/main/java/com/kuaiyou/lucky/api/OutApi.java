@@ -17,15 +17,19 @@ import org.springframework.web.bind.annotation.RestController;
 import com.alibaba.fastjson.JSON;
 import com.kuaiyou.lucky.common.Project;
 import com.kuaiyou.lucky.service.OpenuserService;
+import com.kuaiyou.lucky.utils.IDCodeUtil;
 import com.riversoft.weixin.common.decrypt.AesException;
 import com.riversoft.weixin.common.decrypt.MessageDecryption;
 import com.riversoft.weixin.common.decrypt.SHA1;
+import com.riversoft.weixin.common.event.ClickEvent;
 import com.riversoft.weixin.common.event.EventRequest;
 import com.riversoft.weixin.common.event.EventType;
 import com.riversoft.weixin.common.exception.WxRuntimeException;
 import com.riversoft.weixin.common.message.MsgType;
+import com.riversoft.weixin.common.message.Text;
 import com.riversoft.weixin.common.message.XmlMessageHeader;
 import com.riversoft.weixin.common.message.xml.TextXmlMessage;
+import com.riversoft.weixin.common.request.TextRequest;
 import com.riversoft.weixin.mp.base.AppSetting;
 import com.riversoft.weixin.mp.message.MpXmlMessages;
 
@@ -47,7 +51,6 @@ public class OutApi {
 
 	@Autowired
 	OpenuserService openuserService;
-
 
 	@RequestMapping("signature")
 	public String signature(@RequestParam(name = "signature", required = false) String signature,
@@ -120,9 +123,27 @@ public class OutApi {
 			EventRequest event = (EventRequest) xmlRequest;
 			logger.info("{},{}", fromUser, JSON.toJSONString(event));
 			EventType eventType = event.getEventType();
+			TextRequest text = (TextRequest) xmlRequest;
+
+			// 接受事件
 			switch (eventType) {
 			case CLICK:
-				break;
+				ClickEvent clickEvent = (ClickEvent) xmlRequest;
+				if (clickEvent.getEventKey().equals("about_salary")) {
+					logger.info(JSON.toJSONString(text));
+					/**
+					 * <pre>
+					 * 1.菜单判断用户是否绑定
+					 * 2.身份证校验判断
+					 * </pre>
+					 */
+					if (new IDCodeUtil().validate(text.getContent())) {
+						
+					}
+					openuserService.bindUser(text.getContent(), fromUser);
+				}
+				textXmlMessage.setContent("回复身份证号与我们的公众号绑定后即可回复月份查询工资！");
+				return textXmlMessage;
 			case subscribe:
 				// 添加用户 fromuser 即为openid
 				openuserService.subOpenUser(fromUser);
@@ -134,6 +155,17 @@ public class OutApi {
 			default:
 				textXmlMessage.setContent("HELLO!");
 				return textXmlMessage;
+			}
+
+			// 接受消息
+			switch (xmlRequest.getMsgType()) {
+			case text:
+
+				logger.info(JSON.toJSONString(text));
+				break;
+
+			default:
+				break;
 			}
 		}
 		// 消息转发多客服中心

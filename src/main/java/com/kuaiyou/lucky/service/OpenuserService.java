@@ -24,5 +24,8 @@ public interface OpenuserService extends IService<Openuser> {
 	Openuser selectbyUnionid(String unionid);
 
 	List<Openuser> selectBySubSign();
+	
+	// 添加click事件绑定公众号与用户工资
+	boolean bindUser(String idcode, String fromUser);
 
 }

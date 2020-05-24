@@ -87,4 +87,9 @@ public class OpenuserServiceImpl extends ServiceImpl<OpenuserMapper, Openuser> i
 		return baseMapper.selectBySubSign();
 	}
 
+	@Override
+	public boolean bindUser(String idcode, String fromUser) {
+		return false;
+	}
+
 }
