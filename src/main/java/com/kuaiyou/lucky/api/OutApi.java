@@ -123,27 +123,22 @@ public class OutApi {
 			EventRequest event = (EventRequest) xmlRequest;
 			logger.info("{},{}", fromUser, JSON.toJSONString(event));
 			EventType eventType = event.getEventType();
-			TextRequest text = (TextRequest) xmlRequest;
 
 			// 接受事件
-			logger.info("{}",JSON.toJSONString(eventType));
+			logger.info("{}", JSON.toJSONString(eventType));
 			switch (eventType) {
 			case CLICK:
 				ClickEvent clickEvent = (ClickEvent) xmlRequest;
-				logger.info("{}",JSON.toJSONString(clickEvent));
-				if (clickEvent.getEventKey().equals("about_salary")) {
-					logger.info("{}",JSON.toJSONString(text));
-					/**
-					 * <pre>
-					 * 1.菜单判断用户是否绑定
-					 * 2.身份证校验判断
-					 * </pre>
-					 */
-					if (new IDCodeUtil().validate(text.getContent())) {
-
-					}
-					openuserService.bindUser(text.getContent(), fromUser);
-				}
+				logger.info("{}", JSON.toJSONString(clickEvent));
+//				if (clickEvent.getEventKey().equals("about_salary")) {
+//					/**
+//					 * <pre>
+//					 * 1.菜单判断用户是否绑定
+//					 * 2.身份证校验判断
+//					 * </pre>
+//					 */
+//					openuserService.bindUser(text.getContent(), fromUser);
+//				}
 				textXmlMessage.setContent("回复身份证号与我们的公众号绑定后即可回复月份查询工资！");
 				return textXmlMessage;
 			case subscribe:
