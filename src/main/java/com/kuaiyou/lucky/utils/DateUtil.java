@@ -42,7 +42,7 @@ public class DateUtil {
 	}
 
 	public static String getNow() {
-		SimpleDateFormat sdf = new SimpleDateFormat(YMD);
+		SimpleDateFormat sdf = new SimpleDateFormat(YM);
 		return sdf.format(new Date());
 	}
 
