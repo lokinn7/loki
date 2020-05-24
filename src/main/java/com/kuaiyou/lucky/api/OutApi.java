@@ -196,7 +196,7 @@ public class OutApi {
 				if (content.equals("贺亚楠")) {
 					Salary openuser = salaryService.selectById(1);
 
-					textXmlMessage.setContent("姓名：" + "测试人员" + "/r/n" + "身份证号：" + openuser.getIdcode() + "/r/n" + "部门"
+					textXmlMessage.setContent("姓名：" + "测试人员" + "\n" + "身份证号：" + openuser.getIdcode() + "\n" + "部门"
 							+ openuser.getDepartment());
 					return textXmlMessage;
 				}
