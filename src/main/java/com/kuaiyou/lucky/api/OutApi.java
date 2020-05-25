@@ -224,9 +224,15 @@ public class OutApi {
 						textXmlMessage.setContent("系统暂未收录您的个人信息，请联系管理员");
 						return textXmlMessage;
 					}
-					bindService.bind(content, fromUser);
-					textXmlMessage.setContent("绑定成功，回复年份+月份即可查询工资，如：2020-01");
-					return textXmlMessage;
+					Bind cahBind = bindService.selectByOpenid(fromUser);
+					if (cahBind != null) {
+						textXmlMessage.setContent("您已绑定过了，请勿重复绑定");
+						return textXmlMessage;
+					} else {
+						bindService.bind(content, fromUser);
+						textXmlMessage.setContent("绑定成功，回复年份+月份即可查询工资，如：2020-01");
+						return textXmlMessage;
+					}
 				}
 				if (DateUtil.isValidDate(content)) {
 					logger.info(event.getContent());
