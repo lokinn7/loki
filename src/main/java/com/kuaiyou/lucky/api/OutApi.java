@@ -129,10 +129,11 @@ public class OutApi {
 
 	private XmlMessageHeader mpDispatch(XmlMessageHeader xmlRequest) {
 		/*
-		* 需要注意的是，在接收到微信推送的消息中tousername、fromusername的顺序与平台返回给微信（即要发送给微信用户）的交互信息中tousername、fromusername的值是相反的
-		* 接受到的消息中：tousername=开发者公众号，fromusername=openid
-		* 发送给微信的消息中：tousername=openid,fromusername=开发者的公账号
-		*/
+		 * 需要注意的是，在接收到微信推送的消息中tousername、fromusername的顺序与平台返回给微信（即要发送给微信用户）
+		 * 的交互信息中tousername、fromusername的值是相反的
+		 * 接受到的消息中：tousername=开发者公众号，fromusername=openid
+		 * 发送给微信的消息中：tousername=openid,fromusername=开发者的公账号
+		 */
 		String fromUser = xmlRequest.getFromUser();
 		String toUser = xmlRequest.getToUser();
 		if (xmlRequest instanceof EventRequest) {
@@ -229,25 +230,33 @@ public class OutApi {
 				}
 				if (DateUtil.isValidDate(content)) {
 					logger.info(event.getContent());
-					// 返回指定月份工资
-					Salary openuser = salaryService.selectByMonth(content, fromUser);
-					if (openuser != null) {
-						textXmlMessage.setContent("姓名：" + openuser.getNickname() + "\n身份证号：" + openuser.getIdcode()
-								+ "\n部门:" + openuser.getDepartment() + "\n岗位工资：" + openuser.getPostSalary() + "\n基本工资："
-								+ openuser.getBaseSalary() + "\n岗位（技术）津贴："
-								+ (openuser.getPostSubsidy() == null ? "-" : openuser.getPostSubsidy()) + "\n学历津贴："
-								+ (openuser.getEduSubsidy() == null ? "-" : openuser.getEduSubsidy()) + "\n出勤："
-								+ (openuser.getAttendance() == null ? "-" : openuser.getAttendance()) + "\n加班："
-								+ (openuser.getOvertime() == null ? "-" : openuser.getOvertime()) + "\n本月工资："
-								+ openuser.getSalary() + "\n罚款："
-								+ (openuser.getFine() == null ? "-" : openuser.getFine()) + "\n收入合计："
-								+ openuser.getTotal() + "\n税费扣除："
-								+ (openuser.getAddTaxes() == null ? "-" : openuser.getAddTaxes()) + "\n扣借款："
-								+ (openuser.getMines() == null ? "-" : openuser.getMines()) + "\n实发："
-								+ openuser.getFactSalary());
-						return textXmlMessage;
+					// 先查询绑定
+					Bind cacheBind = bindService.selectByOpenid(fromUser);
+					if (cacheBind != null) {
+
+						// 返回指定月份工资
+						Salary openuser = salaryService.selectByMonth(content, fromUser);
+						if (openuser != null) {
+							textXmlMessage.setContent("姓名：" + openuser.getNickname() + "\n身份证号：" + openuser.getIdcode()
+									+ "\n部门:" + openuser.getDepartment() + "\n岗位工资：" + openuser.getPostSalary()
+									+ "\n基本工资：" + openuser.getBaseSalary() + "\n岗位（技术）津贴："
+									+ (openuser.getPostSubsidy() == null ? "-" : openuser.getPostSubsidy()) + "\n学历津贴："
+									+ (openuser.getEduSubsidy() == null ? "-" : openuser.getEduSubsidy()) + "\n出勤："
+									+ (openuser.getAttendance() == null ? "-" : openuser.getAttendance()) + "\n加班："
+									+ (openuser.getOvertime() == null ? "-" : openuser.getOvertime()) + "\n本月工资："
+									+ openuser.getSalary() + "\n罚款："
+									+ (openuser.getFine() == null ? "-" : openuser.getFine()) + "\n收入合计："
+									+ openuser.getTotal() + "\n税费扣除："
+									+ (openuser.getAddTaxes() == null ? "-" : openuser.getAddTaxes()) + "\n扣借款："
+									+ (openuser.getMines() == null ? "-" : openuser.getMines()) + "\n实发："
+									+ openuser.getFactSalary());
+							return textXmlMessage;
+						} else {
+							textXmlMessage.setContent("系统暂未收录该月工资信息，请日后再试");
+							return textXmlMessage;
+						}
 					} else {
-						textXmlMessage.setContent("系统暂未收录该月工资信息，请日后再试");
+						textXmlMessage.setContent("您还未绑定个人信息，输入身份证号码绑定");
 						return textXmlMessage;
 					}
 				}

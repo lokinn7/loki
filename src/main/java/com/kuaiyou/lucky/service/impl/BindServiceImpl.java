@@ -39,4 +39,9 @@ public class BindServiceImpl extends ServiceImpl<BindMapper, Bind> implements Bi
 		return true;
 	}
 
+	@Override
+	public Bind selectByOpenid(String fromUser) {
+		return selectOne(new EntityWrapper<Bind>().eq(Bind.OPENID, fromUser));
+	}
+
 }

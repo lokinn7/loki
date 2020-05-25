@@ -17,4 +17,6 @@ public interface BindService extends IService<Bind> {
 
 	boolean bind(String content, String toUser);
 
+	Bind selectByOpenid(String fromUser);
+
 }
