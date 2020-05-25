@@ -151,7 +151,7 @@ public class OutApi {
 				 */
 
 				if (clickEvent.getEventKey().equals("about_salary")) {
-					Bind bind = bindService.selectWithIDcode(toUser);
+					Bind bind = bindService.selectWithIDcode(fromUser);
 					if (bind != null) {
 //						Salary openuser = salaryService.selectByOpenidAndMonth(bind);
 //						if (openuser != null) {
@@ -165,7 +165,7 @@ public class OutApi {
 //									+ openuser.getFactSalary());
 //							return textXmlMessage;
 //						}
-						textXmlMessage.setContent("已将我们的公众号与您的个人身份绑定，可回复月份，如：2020-01即可查询工资！");
+						textXmlMessage.setContent("已将我们的公众号与您的个人身份绑定，回复月份，如：2020-01即可查询工资！");
 						return textXmlMessage;
 					}
 				}
@@ -196,8 +196,8 @@ public class OutApi {
 		}
 		if (xmlRequest instanceof TextRequest) {
 			TextXmlMessage textXmlMessage = new TextXmlMessage();
-			textXmlMessage.setFromUser(toUser);
-			textXmlMessage.setToUser(fromUser);
+			textXmlMessage.setFromUser(fromUser);
+			textXmlMessage.setToUser(toUser);
 			textXmlMessage.setCreateTime(new Date());
 			TextRequest event = (TextRequest) xmlRequest;
 			logger.info("{},{}", fromUser, JSON.toJSONString(event));
@@ -229,17 +229,17 @@ public class OutApi {
 					Salary openuser = salaryService.selectByMonth(content, toUser);
 					if (openuser != null) {
 						textXmlMessage.setContent("姓名：" + openuser.getNickname() + "\n身份证号：" + openuser.getIdcode()
-								+ "\n部门:" + openuser.getDepartment() + "\n岗位工资" + openuser.getPostSalary() + "\n基本工资"
-								+ openuser.getBaseSalary() + "\n岗位（技术）津贴"
-								+ (openuser.getPostSubsidy() == null ? "-" : openuser.getPostSubsidy()) + "\n学历津贴"
-								+ (openuser.getEduSubsidy() == null ? "-" : openuser.getEduSubsidy()) + "\n出勤"
-								+ (openuser.getAttendance() == null ? "-" : openuser.getAttendance()) + "\n加班"
-								+ (openuser.getOvertime() == null ? "-" : openuser.getOvertime()) + "\n本月工资"
-								+ openuser.getSalary() + "\n罚款"
-								+ (openuser.getFine() == null ? "-" : openuser.getFine()) + "\n收入合计"
-								+ openuser.getTotal() + "\n税费扣除"
-								+ (openuser.getAddTaxes() == null ? "-" : openuser.getAddTaxes()) + "\n扣借款"
-								+ (openuser.getMines() == null ? "-" : openuser.getMines()) + "\n实发"
+								+ "\n部门:" + openuser.getDepartment() + "\n岗位工资：" + openuser.getPostSalary() + "\n基本工资："
+								+ openuser.getBaseSalary() + "\n岗位（技术）津贴："
+								+ (openuser.getPostSubsidy() == null ? "-" : openuser.getPostSubsidy()) + "\n学历津贴："
+								+ (openuser.getEduSubsidy() == null ? "-" : openuser.getEduSubsidy()) + "\n出勤："
+								+ (openuser.getAttendance() == null ? "-" : openuser.getAttendance()) + "\n加班："
+								+ (openuser.getOvertime() == null ? "-" : openuser.getOvertime()) + "\n本月工资："
+								+ openuser.getSalary() + "\n罚款："
+								+ (openuser.getFine() == null ? "-" : openuser.getFine()) + "\n收入合计："
+								+ openuser.getTotal() + "\n税费扣除："
+								+ (openuser.getAddTaxes() == null ? "-" : openuser.getAddTaxes()) + "\n扣借款："
+								+ (openuser.getMines() == null ? "-" : openuser.getMines()) + "\n实发："
 								+ openuser.getFactSalary());
 						return textXmlMessage;
 					} else {
