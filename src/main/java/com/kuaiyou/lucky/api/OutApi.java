@@ -128,6 +128,11 @@ public class OutApi {
 	}
 
 	private XmlMessageHeader mpDispatch(XmlMessageHeader xmlRequest) {
+		/*
+		* 需要注意的是，在接收到微信推送的消息中tousername、fromusername的顺序与平台返回给微信（即要发送给微信用户）的交互信息中tousername、fromusername的值是相反的
+		* 接受到的消息中：tousername=开发者公众号，fromusername=openid
+		* 发送给微信的消息中：tousername=openid,fromusername=开发者的公账号
+		*/
 		String fromUser = xmlRequest.getFromUser();
 		String toUser = xmlRequest.getToUser();
 		if (xmlRequest instanceof EventRequest) {
@@ -140,7 +145,6 @@ public class OutApi {
 			EventType eventType = event.getEventType();
 
 			// 接受事件
-			logger.info("{}", JSON.toJSONString(eventType));
 			switch (eventType) {
 			case CLICK:
 				ClickEvent clickEvent = (ClickEvent) xmlRequest;
@@ -196,8 +200,8 @@ public class OutApi {
 		}
 		if (xmlRequest instanceof TextRequest) {
 			TextXmlMessage textXmlMessage = new TextXmlMessage();
-			textXmlMessage.setFromUser(fromUser);
-			textXmlMessage.setToUser(toUser);
+			textXmlMessage.setFromUser(toUser);
+			textXmlMessage.setToUser(fromUser);
 			textXmlMessage.setCreateTime(new Date());
 			TextRequest event = (TextRequest) xmlRequest;
 			logger.info("{},{}", fromUser, JSON.toJSONString(event));
@@ -219,14 +223,14 @@ public class OutApi {
 						textXmlMessage.setContent("系统暂未收录您的个人信息，请联系管理员");
 						return textXmlMessage;
 					}
-					bindService.bind(content, toUser);
+					bindService.bind(content, fromUser);
 					textXmlMessage.setContent("绑定成功，回复年份+月份即可查询工资，如：2020-01");
 					return textXmlMessage;
 				}
 				if (DateUtil.isValidDate(content)) {
 					logger.info(event.getContent());
 					// 返回指定月份工资
-					Salary openuser = salaryService.selectByMonth(content, toUser);
+					Salary openuser = salaryService.selectByMonth(content, fromUser);
 					if (openuser != null) {
 						textXmlMessage.setContent("姓名：" + openuser.getNickname() + "\n身份证号：" + openuser.getIdcode()
 								+ "\n部门:" + openuser.getDepartment() + "\n岗位工资：" + openuser.getPostSalary() + "\n基本工资："
