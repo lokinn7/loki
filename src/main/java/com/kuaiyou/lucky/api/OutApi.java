@@ -244,7 +244,7 @@ public class OutApi {
 						Salary openuser = salaryService.selectByMonth(content, fromUser);
 						if (openuser != null) {
 							textXmlMessage.setContent("姓名：" + openuser.getNickname() + "\n身份证号：" + openuser.getIdcode()
-									+ "\n部门:" + openuser.getDepartment() + "\n岗位工资：" + openuser.getPostSalary()
+									+ "\n部门：" + openuser.getDepartment() + "\n岗位工资：" + openuser.getPostSalary()
 									+ "\n基本工资：" + openuser.getBaseSalary() + "\n岗位（技术）津贴："
 									+ (openuser.getPostSubsidy() == null ? "-" : openuser.getPostSubsidy()) + "\n学历津贴："
 									+ (openuser.getEduSubsidy() == null ? "-" : openuser.getEduSubsidy()) + "\n出勤："
@@ -254,8 +254,8 @@ public class OutApi {
 									+ (openuser.getFine() == null ? "-" : openuser.getFine()) + "\n收入合计："
 									+ openuser.getTotal() + "\n税费扣除："
 									+ (openuser.getAddTaxes() == null ? "-" : openuser.getAddTaxes()) + "\n扣借款："
-									+ (openuser.getMines() == null ? "-" : openuser.getMines())+"\n奖金"
-									+ (openuser.getBonus() ==null ? "-" : openuser.getBonus())+"\n其他补助"
+									+ (openuser.getMines() == null ? "-" : openuser.getMines())+"\n奖金："
+									+ (openuser.getBonus() ==null ? "-" : openuser.getBonus())+"\n其他补助："
 									+ (openuser.getOtherSubsidy() ==null ? "-" : openuser.getOtherSubsidy()) + "\n实发："
 									+ openuser.getFactSalary());
 							return textXmlMessage;
