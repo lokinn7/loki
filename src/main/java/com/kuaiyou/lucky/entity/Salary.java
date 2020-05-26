@@ -31,32 +31,32 @@ public class Salary extends Model<Salary> {
 	private String department;
 	private String bankcode;
 	private String job;
-	private Double postcode;
-	private Double coefficient;
+	private String postcode;
+	private String coefficient;
 	@TableField("post_salary")
-	private Double postSalary;
+	private String postSalary;
 	@TableField("base_salary")
-	private Double baseSalary;
+	private String baseSalary;
 	@TableField("post_subsidy")
-	private Double postSubsidy;
+	private String postSubsidy;
 	@TableField("edu_subsidy")
 	private String eduSubsidy;
 	@TableField("overtime_salary")
 	private String overtimeSalary;
-	private Double bonus;
-	private Double attendance;
+	private String bonus;
+	private String attendance;
 	private String overtime;
-	private Double salary;
+	private String salary;
 	@TableField("other_subsidy")
-	private Double otherSubsidy;
+	private String otherSubsidy;
 	private String fine;
-	private Double total;
+	private String total;
 	@TableField("add_taxes")
-	private Double addTaxes;
+	private String addTaxes;
 	private String mines;
 	private String taxes;
 	@TableField("fact_salary")
-	private Double factSalary;
+	private String factSalary;
 	private String gender;
 	private String phone;
 	private String injobdate;
