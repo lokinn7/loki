@@ -239,7 +239,6 @@ public class OutApi {
 					// 先查询绑定
 					Bind cacheBind = bindService.selectByOpenid(fromUser);
 					if (cacheBind != null) {
-
 						// 返回指定月份工资
 						Salary openuser = salaryService.selectByMonth(content, fromUser);
 						if (openuser != null) {
@@ -250,13 +249,13 @@ public class OutApi {
 									+ (openuser.getEduSubsidy() == null ? "-" : openuser.getEduSubsidy()) + "\n出勤："
 									+ (openuser.getAttendance() == null ? "-" : openuser.getAttendance()) + "\n加班："
 									+ (openuser.getOvertime() == null ? "-" : openuser.getOvertime()) + "\n本月工资："
+									+ (openuser.getMines() == null ? "-" : openuser.getMines()) + "\n奖金："
+									+ (openuser.getBonus() == null ? "-" : openuser.getBonus()) + "\n其他补助："
 									+ openuser.getSalary() + "\n罚款："
 									+ (openuser.getFine() == null ? "-" : openuser.getFine()) + "\n收入合计："
 									+ openuser.getTotal() + "\n税费扣除："
 									+ (openuser.getAddTaxes() == null ? "-" : openuser.getAddTaxes()) + "\n扣借款："
-									+ (openuser.getMines() == null ? "-" : openuser.getMines())+"\n奖金："
-									+ (openuser.getBonus() ==null ? "-" : openuser.getBonus())+"\n其他补助："
-									+ (openuser.getOtherSubsidy() ==null ? "-" : openuser.getOtherSubsidy()) + "\n实发："
+									+ (openuser.getOtherSubsidy() == null ? "-" : openuser.getOtherSubsidy()) + "\n实发："
 									+ openuser.getFactSalary());
 							return textXmlMessage;
 						} else {
