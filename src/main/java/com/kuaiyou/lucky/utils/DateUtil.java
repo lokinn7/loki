@@ -15,11 +15,12 @@ public class DateUtil {
 
 	public static String YMD = "yyyy-MM-dd";
 	public static String YM = "yyyy-MM";
+	public static String Ym = "yyyy-M";
 	public static String YMDHMS = "yyyy-MM-dd HH:mm:ss";
 
 	public static boolean isValidDate(String str) {
 		boolean convertSuccess = true;
-		SimpleDateFormat format = new SimpleDateFormat(YM);
+		SimpleDateFormat format = new SimpleDateFormat(Ym);
 		try {
 			format.setLenient(false);
 			format.parse(str);
@@ -27,6 +28,18 @@ public class DateUtil {
 			convertSuccess = false;
 		}
 		return convertSuccess;
+	}
+
+	public static String parseDate(String str) {
+		SimpleDateFormat format = new SimpleDateFormat(YM);
+		try {
+			format.setLenient(false);
+			Date parse = format.parse(str);
+			return format.format(parse);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		return str;
 	}
 
 	public static String format(Date date, String patter) {
@@ -157,7 +170,7 @@ public class DateUtil {
 	}
 
 	public static void main(String[] args) {
-		System.out.println(isValidDate("2020-10"));
+		System.out.println(parseDate("2020-09"));
 	}
 
 }

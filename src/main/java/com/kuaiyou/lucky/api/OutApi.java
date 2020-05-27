@@ -240,7 +240,7 @@ public class OutApi {
 					Bind cacheBind = bindService.selectByOpenid(fromUser);
 					if (cacheBind != null) {
 						// 返回指定月份工资
-						Salary openuser = salaryService.selectByMonth(content, fromUser);
+						Salary openuser = salaryService.selectByMonth(DateUtil.parseDate(content), fromUser);
 						if (openuser != null) {
 							textXmlMessage.setContent("姓名：" + openuser.getNickname() + "\n身份证号：" + openuser.getIdcode()
 									+ "\n部门：" + openuser.getDepartment() + "\n岗位工资：" + openuser.getPostSalary()
