@@ -174,7 +174,7 @@ public class OutApi {
 						return textXmlMessage;
 					}
 				}
-				textXmlMessage.setContent("回复身份证号与我们的公众号绑定，如已绑定则可回复月份，如：2020-01查询工资！");
+				textXmlMessage.setContent("回复身份证号与我们的公众号绑定，如已绑定则可回复月份，如：2020-01查询工资！请注意，绑定后不可解绑，谨慎对待！");
 				return textXmlMessage;
 			case subscribe:
 				// 添加用户 fromuser 即为openid
